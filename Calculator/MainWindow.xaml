@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator"
         mc:Ignorable="d"
-        Title="Калькулятор" MaxHeight="550" MaxWidth="300">
-    
+        Title="Калькулятор" 
+
+        Height="480" 
+        Width="300"
+        MinHeight="480" 
+        MaxHeight="480"
+        MinWidth="300" 
+        MaxWidth="300"
+        ResizeMode="CanMinimize">
+
     <Window.Resources>
         <Style x:Key="MainButton" TargetType="Button">
             <Setter Property="Background" Value="WhiteSmoke"/>
@@ -41,7 +49,7 @@
             <Border Height="30"/>
             <TextBlock Height="100" Padding="25" TextAlignment="Left" Text="0" FontSize="30"/>
             <StackPanel>
-                <WrapPanel x:Name="Buttons">
+                <WrapPanel x:Name="Buttons" Width="300">
                     <Button Content="" Style="{StaticResource MainButton}"/>
                     <Button Content="" Style="{StaticResource MainButton}"/>
                     <Button Content="C" Style="{StaticResource MainButton}"/>
