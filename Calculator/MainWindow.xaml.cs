@@ -10,7 +10,7 @@ namespace Calculator
     {
         public MainWindow()
         {
-            ExpressionParser parser = new ExpressionParser();
+            ExpressionSolver parser = new ExpressionSolver();
             parser.Event += Parser_Event;
             MessageBox.Show(parser.TryParse("4x-5+=11").ToString());
         }

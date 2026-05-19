@@ -1,17 +1,12 @@
 namespace Alghoritms
 {
-    public class ExpressionParser
+    public class ExpressionSolver
     {
+        //Для тестирования(потом удалить)
         public event PrintMessage? Event;
         public delegate void PrintMessage(string message);
 
-        private const string wrongExpression = "Не удалось считать выражение";
         private char[] operators = { '+', '-', '*', '/' };
-
-        public bool TryParse(string expression)
-        {
-            return CheckExpressionAccuracy(expression);
-        }
 
         //4x-5=11 - true
         //+4x-5=11 - true
@@ -21,7 +16,7 @@ namespace Alghoritms
         //4x-5=11- - false
         //4x-5+=11 - false
         //(4x+(5+22)/(34+y))+(12x-8y)=8 - true
-        private bool CheckExpressionAccuracy(string expression, bool isRecursive = false)
+        public bool CheckExpressionAccuracy(string expression, bool isRecursive = false)
         {
             Event?.Invoke(expression);
 
