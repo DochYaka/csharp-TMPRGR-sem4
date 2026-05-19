@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Calculator"
         mc:Ignorable="d"
-        Title="Калькулятор" MaxHeight="550" MaxWidth="300">
+        Title="Калькулятор" MaxHeight="500" MaxWidth="304">
     
     <Window.Resources>
         <Style x:Key="MainButton" TargetType="Button">
