@@ -6,11 +6,10 @@
     ////4x=11+5
     ////4x=16
     ////x=4
-    //public class Expression
-    //{
-    //    public Queue<IComputed> Variables = new();
-    //    public Queue<Operator> Operators = new();
-    //}
+    public class Expression
+    {
+        
+    }
 
     //public class ExpressionComputings
     //{

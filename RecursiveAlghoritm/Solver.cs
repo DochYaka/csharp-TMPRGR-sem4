@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Alghoritms
 {
     public class ExpressionSolver
@@ -6,90 +8,138 @@ namespace Alghoritms
         public event PrintMessage? Event;
         public delegate void PrintMessage(string message);
 
-        private char[] operators = { '+', '-', '*', '/' };
-
-        //4x-5=11 - true
-        //+4x-5=11 - true
-        //4abc12+12-92a=28ad-fea+x - true
-        //((4x)-1)=2 - false
-        //()4x-1=2 - false
-        //4x-5=11- - false
-        //4x-5+=11 - false
-        //(4x+(5+22)/(34+y))+(12x-8y)=8 - true
-        public bool CheckExpressionAccuracy(string expression, bool isRecursive = false)
+        internal enum TokenType
         {
-            Event?.Invoke(expression);
-
-            bool hasOperator = false;
-            bool isOperator = false;
-            bool equalsFlag = false;
-
-            for (int i = 0; i < expression.Length; i++)
-            {
-                var item = expression[i];
-                if (operators.Contains(item))
-                {
-                    if (isOperator)
-                        return false;
-
-                    hasOperator = true;
-                    isOperator = true;
-                }
-                else if(item != '=')
-                    isOperator = false;
-
-                if (item == '=')
-                {
-                    if (equalsFlag || isOperator)
-                        return false;
-                    equalsFlag = true;
-                }
-
-                //(4x+(5+22)/(34+y))+(12x-8y)=8
-                //4x+(5+22)/(34+y) - ?
-                //5+22 - true
-                //34+y - true
-                //12x-8y - true
-                if (item == '(')
-                {
-                    int index = i + 1;
-                    int startIndex = i + 1;
-                    int rightBracketsCount = 0;
-                    int leftBracketsCount = 1;
-                    while (true)
-                    {
-                        if (index >= expression.Length || expression[index] == '=')
-                            return false;
-
-                        if (expression[index] == '(')
-                            leftBracketsCount++;
-                        else if (expression[index] == ')')
-                        {
-                            rightBracketsCount++;
-                            if (rightBracketsCount == leftBracketsCount)
-                            {
-                                if (startIndex >= index)
-                                    return false;
-                                if (!CheckExpressionAccuracy(expression.Substring(startIndex, index - startIndex), true))
-                                    return false;
-
-                                i = index;
-                                break;
-                            }
-                        }
-                        index++;
-                    }
-                    continue;
-                }
-
-                if (item == ')')
-                    return false;
-            }
-
-            if ((!equalsFlag && !isRecursive) || isOperator || !hasOperator)
-                return false;
-            return true;
+            Digit, Operator, Variable, Equals, RightBracket, LeftBracket
         }
 
+        internal class Token(string value, TokenType type)
+        {
+            public string Value { get; } = value;
+            public TokenType Type { get; } = type;
+        }
+
+        private readonly HashSet<string> operators;
+        private readonly Dictionary<char, Func<double, double, double>> _operations;
+
+        public ExpressionSolver()
+        {
+            operators = ["+", "-", "*", "/", "^", "u-"];
+            _operations = new Dictionary<char, Func<double, double, double>>
+            {
+                ['+'] = (a, b) => a + b,
+                ['-'] = (a, b) => a - b,
+                ['*'] = (a, b) => a * b,
+                ['/'] = (a, b) => a / b,
+                ['^'] = (a, b) => Math.Pow(a, b)
+            };
+        }
+
+        public string Solve(string expression)
+        {
+            if (string.IsNullOrWhiteSpace(expression))
+                throw new ArgumentException("Выражение пустое!");
+
+            List<Token> tokens = Tokenize(expression);
+
+            if (!ValidateExpression(tokens))
+                throw new Exception("Выражение записано неверно!");
+
+            throw new NotImplementedException();
+        }
+
+        private int GetPrecedence(Token token)
+        {
+            if (token.Type != TokenType.Operator)
+                return -1;
+
+            return token.Value switch
+            {
+                "+" or "-" => 1,
+                "*" or "/" => 2,
+                "^" => 3,
+                "u-" => 4,
+                _ => throw new Exception("Недопустимый оператор")
+            };
+        }
+
+        //Проверяет выражение на корретный ввод
+        private bool ValidateExpression(List<Token> tokens)
+        {
+            if (tokens.Count == 0)
+                return false;
+
+            int bracketBalance = 0;
+            bool hasOperator = false;
+            bool lastWasOperator = false;
+            bool equalsFlag = false;
+
+            foreach (var item in tokens)
+            {
+                if (item.Type == TokenType.Operator)
+                {
+                    if (lastWasOperator)
+                        return false;
+
+                    if (!hasOperator)
+                        hasOperator = true;
+
+                    lastWasOperator = true;
+                }
+                else if (item.Type == TokenType.Equals)
+                {
+                    if (equalsFlag || lastWasOperator)
+                        return false;
+                    equalsFlag = true;
+                    lastWasOperator = false;
+                }
+                else if (item.Type == TokenType.LeftBracket)
+                {
+                    lastWasOperator = false;
+                    bracketBalance++;
+                    hasOperator = false;
+                }
+                else if (item.Type == TokenType.RightBracket)
+                {
+                    lastWasOperator = false;
+                    bracketBalance--; 
+                    if (bracketBalance < 0 || !hasOperator)
+                        return false;
+                }
+                else
+                {
+                    lastWasOperator = false;
+                }
+            }
+
+            return !(!equalsFlag || lastWasOperator || !hasOperator || bracketBalance != 0);
+        }
+
+        //Разбивает выражение на токены
+        private List<Token> Tokenize(string expression)
+        {
+            List<Token> tokens = new();
+            StringBuilder currentNumber = new StringBuilder();
+
+            bool isDouble = false;
+
+            for(int i = 0; i < expression.Length; i++)
+            {
+                var ch = expression[i];
+
+                if (char.IsDigit(ch) || ch == '.')
+                {
+                    if (ch == '.' && !isDouble)
+                        isDouble = true;
+                    else
+                        throw new Exception("Ошибочный токен");
+
+                    currentNumber.Append(ch);
+                }
+                
+            }
+
+            return tokens;
+        } 
     }
 }

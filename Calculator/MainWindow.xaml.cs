@@ -12,7 +12,7 @@ namespace Calculator
         {
             ExpressionSolver parser = new ExpressionSolver();
             parser.Event += Parser_Event;
-            MessageBox.Show(parser.TryParse("4x-5+=11").ToString());
+            MessageBox.Show(parser.CheckExpressionAccuracy("4x-5=11").ToString());
         }
 
         private void Parser_Event(string message)
