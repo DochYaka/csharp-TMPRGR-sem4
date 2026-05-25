@@ -6,57 +6,71 @@
         xmlns:local="clr-namespace:Calculator"
         mc:Ignorable="d"
         Title="Калькулятор" 
-
+        
         Height="480" 
         Width="300"
         MinHeight="480" 
         MaxHeight="480"
         MinWidth="300" 
         MaxWidth="300"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanMinimize"
+        
+        PreviewKeyDown="Window_PreviewKeyDown">
 
     <Window.Resources>
         <Style x:Key="MainButton" TargetType="Button">
-            <Setter Property="Background" Value="WhiteSmoke"/>
-            <Setter Property="BorderBrush" Value="LightGray"/>
-            <Setter Property="BorderThickness" Value="1"/>
+            <Style.Setters>
+                <Setter Property="Background" Value="WhiteSmoke"/>
+                <Setter Property="BorderBrush" Value="LightGray"/>
+                <Setter Property="BorderThickness" Value="1"/>
 
-            <Setter Property="FontSize" Value="20"/>
-            <Setter Property="FontWeight" Value="DemiBold"/>
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontWeight" Value="DemiBold"/>
 
-            <Setter Property="Margin" Value="1"/>
-            <Setter Property="Width" Value="70"/>
-            <Setter Property="Height" Value="50"/>
+                <Setter Property="Margin" Value="1"/>
+                <Setter Property="Width" Value="70"/>
+                <Setter Property="Height" Value="50"/>
 
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border 
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border 
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             CornerRadius="3">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style.Setters>
+<!--
+            <Style.Triggers>
+                <Trigger Property="IsFocused" Value="True">
+                    <Setter Property="Background" Value="LightGray"/>
+                    <Setter Property="Margin" Value="1.5"/>
+                </Trigger>
+            </Style.Triggers>
+-->
         </Style>
     </Window.Resources>
 
     <Grid>
         <StackPanel>
             <Border Height="30"/>
-            <TextBlock Height="100" Padding="25" TextAlignment="Left" Text="0" FontSize="30"/>
+            <TextBlock x:Name="Display" 
+                       Height="100" Padding="25" 
+                       TextAlignment="Left" Text="0" FontSize="30"/>
             <StackPanel>
-                <WrapPanel x:Name="Buttons" Width="300">
-                    <Button Content="" Style="{StaticResource MainButton}"/>
-                    <Button Content="" Style="{StaticResource MainButton}"/>
-                    <Button Content="C" Style="{StaticResource MainButton}"/>
+                <WrapPanel x:Name="Buttons" Width="300" Button.Click="MouseToButton_Click">
+                    <Button Content="x" Style="{StaticResource MainButton}"/>
+                    <Button Content="y" Style="{StaticResource MainButton}"/>
+                    <Button Content="z" Style="{StaticResource MainButton}"/>
                     <Button Content="←" Style="{StaticResource MainButton}"/>
                     <Button Content="(" Style="{StaticResource MainButton}"/>
                     <Button Content=")" Style="{StaticResource MainButton}"/>
-                    <Button Content="|" Style="{StaticResource MainButton}"/>
+                    <Button Content="^" Style="{StaticResource MainButton}"/>
                     <Button Content="÷" Style="{StaticResource MainButton}"/>
                     <Button Content="7" Style="{StaticResource MainButton}"/>
                     <Button Content="8" Style="{StaticResource MainButton}"/>
@@ -70,7 +84,7 @@
                     <Button Content="2" Style="{StaticResource MainButton}"/>
                     <Button Content="3" Style="{StaticResource MainButton}"/>
                     <Button Content="＋" Style="{StaticResource MainButton}"/>
-                    <Button Content="x" Style="{StaticResource MainButton}"/>
+                    <Button Content="C" Style="{StaticResource MainButton}"/>
                     <Button Content="0" Style="{StaticResource MainButton}"/>
                     <Button Content="," Style="{StaticResource MainButton}"/>
                     <Button Content="=" Style="{StaticResource MainButton}" 
