@@ -54,14 +54,14 @@ public partial class MainWindow : Window
 
         { Key.Back, "←" },
         { Key.Delete, "C" },
-
-        { Key.Enter, "=" }
+        { Key.Enter, "Вычислить!" }
     };
 
     private readonly Dictionary<Key, string> ShiftMap = new()
     {
         { Key.D9, "(" },
-        { Key.D0, ")" }
+        { Key.D0, ")" },
+        { Key.OemPlus, "=" }
     };
 
     public MainWindow()
@@ -90,8 +90,7 @@ public partial class MainWindow : Window
         if (value == null)
             return;
 
-
-
+        SimulateClick(value);
         HandleKey(value);
 
         e.Handled = true;
@@ -99,8 +98,6 @@ public partial class MainWindow : Window
 
     private void HandleKey(string value)
     {
-        SimulateClick(value);
-
         switch (value)
         {
             case "C":
@@ -111,8 +108,9 @@ public partial class MainWindow : Window
                 Backspace();
                 break;
 
-            case "=":
-                Calculate();
+            case "Вычислить!":
+                SimulateClick(value);
+                Calculate(value);
                 break;
 
             default:
@@ -145,8 +143,12 @@ public partial class MainWindow : Window
             Display.Text = "0";
     }
 
-    private void Calculate()
+    private void Calculate(string value)
     {
+        if (Display.Text == "0")
+            Display.Text = value;
+        else
+            Display.Text += value;
     }
 
     private async void SimulateClick(string content)
@@ -160,10 +162,18 @@ public partial class MainWindow : Window
         button.RenderTransform = new ScaleTransform(0.95, 0.95);
         button.RenderTransformOrigin = new Point(0.5, 0.5);
 
-        await Task.Delay(100);
+        if (content == "Вычислить!")
+        {
+            button.Background = Brushes.LightGray;
+            button.RenderTransform = new ScaleTransform(0.95, 0.95);
+            button.RenderTransformOrigin = new Point(0.5, 0.5);
+        }
+
+        await Task.Delay(120);
 
         button.ClearValue(Button.BackgroundProperty);
         button.ClearValue(Button.RenderTransformProperty);
+        button.ClearValue(Button.RenderTransformOriginProperty);
 
         equal.Background = Brushes.CornflowerBlue;
         equal.BorderThickness = new Thickness(0);
