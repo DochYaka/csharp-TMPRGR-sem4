@@ -1,5 +1,9 @@
 <Solution>
-  <Project Path="AlgorithmPolis/AlgorithmPolis.csproj" />
-  <Project Path="AlgorithmRecursion/AlgorithmRecursion.csproj" />
+  <Project Path="AlgorithmPolis/AlgorithmPolis.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="AlgorithmRecursion/AlgorithmRecursion.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="Calculator/Calculator.csproj" />
 </Solution>
