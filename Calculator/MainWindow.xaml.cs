@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,39 +24,66 @@ namespace Calculator
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key >= Key.D0 && e.Key <= Key.D9)
+            bool shift = (Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift;
+            if (shift && (e.Key == Key.D9 || e.Key == Key.D0 ))
+            {
+                string ch = e.Key switch
+                {
+                    Key.D9 => "(",
+                    Key.D0 => ")",
+                    _ => ""
+                };
+
+                HandleKey(ch, SimulateClick, AddChar);
+
+                e.Handled = true;
+            }
+            else if (e.Key >= Key.D0 && e.Key <= Key.D9)
             {
                 string digit = (e.Key - Key.D0).ToString();
-                AddDigit(digit);
+                HandleKey(digit, SimulateClick, AddDigit);
                 e.Handled = true;
             }
             else if (e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9)
             {
                 string digit = (e.Key - Key.NumPad0).ToString();
-                AddDigit(digit);
+                HandleKey(digit, SimulateClick, AddDigit);
+                e.Handled = true;
+            }
+            else if (shift && (e.Key == Key.D9 || e.Key == Key.D0))
+            {
+                string ch = e.Key switch
+                {
+                    Key.D9 => "(",
+                    Key.D0 => ")",
+                    _ => ""
+                };
+
+                HandleKey(ch, SimulateClick, AddChar);
+
                 e.Handled = true;
             }
             else switch (e.Key)
                 {
                     case Key.Add:
                     case Key.OemPlus:
-                        AddOperation("＋");
+                        HandleKey("＋", SimulateClick, AddOperation);
                         e.Handled = true;
                         break;
 
                     case Key.Subtract:
                     case Key.OemMinus:
-                        AddOperation("－");
+                        HandleKey("－", SimulateClick, AddOperation);
                         e.Handled = true;
                         break;
 
                     case Key.Multiply:
-                        AddOperation("×");
+                        HandleKey("×", SimulateClick, AddOperation);
                         e.Handled = true;
                         break;
 
                     case Key.Divide:
-                        AddOperation("÷");
+                        HandleKey("÷", SimulateClick, AddOperation);
                         e.Handled = true;
                         break;
 
@@ -82,23 +110,23 @@ namespace Calculator
                     case Key.Decimal:
                     case Key.OemPeriod:
                     case Key.OemComma:
-                        AddComma();
+                        HandleKey(",", SimulateClick, AddChar);
                         e.Handled = true;
                         break;
 
-                    case Key.OemOpenBrackets:
-                        AddChar("(");
-                        e.Handled = true;
-                        break;
+                    //case Key.OemOpenBrackets:
+                    //    HandleKey("(", SimulateClick, AddChar);
+                    //    e.Handled = true;
+                    //    break;
 
-                    case Key.OemCloseBrackets:
-                        AddChar(")");
-                        e.Handled = true;
-                        break;
+                    //case Key.OemCloseBrackets:
+                    //    HandleKey(")", SimulateClick, AddChar);
+                    //    e.Handled = true;
+                    //    break;
                 }
         }
 
-        private void MouseToButton_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             var button = e.OriginalSource as Button;
             var key = button.Content.ToString();
@@ -127,6 +155,14 @@ namespace Calculator
                 Display.Text += digit;
         }
 
+        private void AddChar(string key)
+        {
+            if (Display.Text == "0")
+                Display.Text = key;
+            else
+                Display.Text += key;
+        }
+
         private void AddOperation(string op)
         {
             Display.Text += op;
@@ -146,23 +182,36 @@ namespace Calculator
                 Display.Text = "0";
         }
 
-        private void AddComma()
+        private async void SimulateClick(Button button)
         {
-            if (!Display.Text.Contains(","))
-                Display.Text += ",";
+            button.Background = Brushes.LightGray;
+            button.RenderTransform = new ScaleTransform(0.95, 0.95);
+
+            await Task.Delay(100);
+
+            button.ClearValue(Button.BackgroundProperty);
+            button.ClearValue(Button.RenderTransformProperty);
         }
 
-        private void AddChar(string key)
+        private Button FindButtonByContent(string content)
         {
-            if (Display.Text == "0")
-                Display.Text = key;
-            else
-                Display.Text += key;
+            foreach (var child in Buttons.Children)
+            {
+                if (child is Button button && button.Content.ToString() == content)
+                    return button;
+            }
+            return null;
         }
 
-        private void Button_FocusableChanged(object sender, DependencyPropertyChangedEventArgs e)
+        private void HandleKey(string ch, Action<Button> simulate, Action<string> add)
         {
+            Button button = FindButtonByContent(ch);
 
+            if (button != null)
+            {
+                simulate(button);
+                add(ch);
+            }
         }
     }
 }

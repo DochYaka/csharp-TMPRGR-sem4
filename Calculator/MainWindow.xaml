@@ -71,7 +71,7 @@
                        Height="100" Padding="25" 
                        TextAlignment="Left" Text="0" FontSize="30"/>
             <StackPanel>
-                <WrapPanel x:Name="Buttons" Width="300" Button.Click="MouseToButton_Click">
+                <WrapPanel x:Name="Buttons" Width="300" Button.Click="Button_Click">
                     <Button Content="x" Style="{StaticResource MainButton}"/>
                     <Button Content="y" Style="{StaticResource MainButton}"/>
                     <Button Content="z" Style="{StaticResource MainButton}"/>
