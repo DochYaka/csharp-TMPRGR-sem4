@@ -67,9 +67,12 @@
     <Grid>
         <StackPanel>
             <Border Height="30"/>
-            <TextBlock x:Name="Display" 
-                       Height="100" Padding="25" 
-                       TextAlignment="Left" Text="0" FontSize="30"/>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
+                          Height="100">
+                <TextBlock x:Name="Display" 
+                           Padding="25" 
+                           TextAlignment="Left" Text="0" FontSize="30"/>
+            </ScrollViewer>
             <StackPanel>
                 <WrapPanel x:Name="Buttons" Width="300" Button.Click="Button_Click">
                     <Button Content="x" Style="{StaticResource MainButton}"/>
@@ -95,7 +98,7 @@
                     <Button Content="C" Style="{StaticResource MainButton}"/>
                     <Button Content="0" Style="{StaticResource MainButton}"/>
                     <Button Content="," Style="{StaticResource MainButton}"/>
-                    <Button Content="=" Style="{StaticResource MainButton}" 
+                    <Button x:Name="equal" Content="=" Style="{StaticResource MainButton}" 
                             Background="CornflowerBlue" BorderThickness="0" Foreground="White"/>
                 </WrapPanel>
             </StackPanel>

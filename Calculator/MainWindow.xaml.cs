@@ -75,6 +75,9 @@ public partial class MainWindow : Window
 
         string value = null;
 
+        if (e.Key == Key.Escape)
+            Close();
+
         if (shift && ShiftMap.TryGetValue(e.Key, out string shiftValue))
         {
             value = shiftValue;
@@ -87,12 +90,14 @@ public partial class MainWindow : Window
         if (value == null)
             return;
 
-        HandleInput(value);
+
+
+        HandleKey(value);
 
         e.Handled = true;
     }
 
-    private void HandleInput(string value)
+    private void HandleKey(string value)
     {
         SimulateClick(value);
 
@@ -119,9 +124,7 @@ public partial class MainWindow : Window
     private void Button_Click(object sender, RoutedEventArgs e)
     {
         if (e.OriginalSource is Button button)
-        {
-            HandleInput(button.Content.ToString());
-        }
+            HandleKey(button.Content.ToString());
     }
 
     private void AddText(string value)
@@ -132,10 +135,7 @@ public partial class MainWindow : Window
             Display.Text += value;
     }
 
-    private void Clear()
-    {
-        Display.Text = "0";
-    }
+    private void Clear() => Display.Text = "0";
 
     private void Backspace()
     {
@@ -158,11 +158,16 @@ public partial class MainWindow : Window
 
         button.Background = Brushes.LightGray;
         button.RenderTransform = new ScaleTransform(0.95, 0.95);
+        button.RenderTransformOrigin = new Point(0.5, 0.5);
 
         await Task.Delay(100);
 
         button.ClearValue(Button.BackgroundProperty);
         button.ClearValue(Button.RenderTransformProperty);
+
+        equal.Background = Brushes.CornflowerBlue;
+        equal.BorderThickness = new Thickness(0);
+        equal.Foreground = Brushes.White;
     }
 
     private Button FindButtonByContent(string content)
