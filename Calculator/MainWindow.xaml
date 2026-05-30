@@ -70,7 +70,7 @@
             <Border Height="30"/>
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
                           Height="100">
-                <TextBlock x:Name="Display" 
+                <TextBox x:Name="Display" 
                            Padding="25" 
                            TextAlignment="Left" Text="0" FontSize="30"/>
             </ScrollViewer>
