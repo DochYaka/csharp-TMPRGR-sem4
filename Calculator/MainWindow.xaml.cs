@@ -236,4 +236,9 @@ public partial class MainWindow : Window
 
         return null;
     }
+
+    private void GuideButtonClick(object sender, RoutedEventArgs e)
+    {
+        var guideWindow = new Window()
+    }
 }

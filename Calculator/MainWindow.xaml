@@ -7,10 +7,10 @@
         mc:Ignorable="d"
         Title="Калькулятор" 
         
-        Height="525" 
+        Height="530" 
         Width="315"
-        MinHeight="525" 
-        MaxHeight="525"
+        MinHeight="530" 
+        MaxHeight="530"
         MinWidth="315" 
         MaxWidth="315"
         ResizeMode="CanMinimize"
@@ -67,17 +67,24 @@
 
     <Grid>
         <StackPanel>
-            <Border Height="30"/>
+            <Border Height="50">
+                <Button Content="?" FontSize="20"
+                        Width="40" Height="40"
+                        BorderBrush="LightGray" BorderThickness="1" Margin="0 0 5 0"
+                        HorizontalAlignment="Right" Background="WhiteSmoke" Click="Button_Click_1">
+                </Button>
+            </Border>
+            
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
-                          Height="100">
+                          Height="80">
                 <TextBox x:Name="Display" 
-                           Padding="25" 
+                           Padding="20" 
                            TextAlignment="Left" Text="0" FontSize="30"/>
             </ScrollViewer>
             <WrapPanel x:Name="Buttons" Button.Click="Button_Click" Width="288">
                 <Button Content="x" Style="{StaticResource MainButton}"/>
-                <Button Content="y" Style="{StaticResource MainButton}"/>
-                <Button Content="z" Style="{StaticResource MainButton}"/>
+                <Button Content="" Style="{StaticResource MainButton}"/>
+                <Button Content="" Style="{StaticResource MainButton}"/>
                 <Button Content="←" Style="{StaticResource MainButton}"/>
                 <Button Content="(" Style="{StaticResource MainButton}"/>
                 <Button Content=")" Style="{StaticResource MainButton}"/>
