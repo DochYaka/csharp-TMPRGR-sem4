@@ -1,15 +1,19 @@
-﻿using System.Text;
+﻿using Alghoritms;
+using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using Alghoritms;
+using System.Windows.Navigation;
 
 namespace Calculator;
 
 public partial class MainWindow : Window
 {
     private bool IsCalculated = false;
+
+    private bool guideIsOpen = false;
 
     private readonly Dictionary<Key, string> KeyMap = new()
     {
@@ -237,8 +241,28 @@ public partial class MainWindow : Window
         return null;
     }
 
-    private void GuideButtonClick(object sender, RoutedEventArgs e)
+    private void GuideButton(object sender, RoutedEventArgs e)
     {
-        var guideWindow = new Window()
+        var guideWindow = new GuideWindow();
+
+        guideWindow.WindowStartupLocation = WindowStartupLocation.Manual;
+        guideWindow.Left = this.Left + this.Width + 10;
+        guideWindow.Top = this.Top;
+
+        guideWindow.Show();
+
+        guideIsOpen = true;
+        Update();
+
+        guideWindow.Closed += (s, args) =>
+        {
+            guideIsOpen = false;
+            Update();
+        };
+    }
+
+    private void Update()
+    {
+        guideButton.IsEnabled = !guideIsOpen;
     }
 }

@@ -14,7 +14,6 @@
         MinWidth="315" 
         MaxWidth="315"
         ResizeMode="CanMinimize"
-        
         PreviewKeyDown="Window_PreviewKeyDown">
 
     <Window.Resources>
@@ -67,17 +66,20 @@
 
     <Grid>
         <StackPanel>
-            <Border Height="50">
-                <Button Content="?" FontSize="20"
+            <StackPanel Orientation="Horizontal" Height="50" Visibility="Visible">
+                <Border Width="255"/>
+
+                <Button Content="?" x:Name="guideButton"
                         Width="40" Height="40"
-                        BorderBrush="LightGray" BorderThickness="1" Margin="0 0 5 0"
-                        HorizontalAlignment="Right" Background="WhiteSmoke" Click="Button_Click_1">
+                        Style="{StaticResource MainButton}" Margin="0 0 5 0"
+                        HorizontalAlignment="Right" Click="GuideButton">
                 </Button>
-            </Border>
+            </StackPanel>
+
             
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"
                           Height="80">
-                <TextBox x:Name="Display" 
+                <TextBlock x:Name="Display" 
                            Padding="20" 
                            TextAlignment="Left" Text="0" FontSize="30"/>
             </ScrollViewer>
